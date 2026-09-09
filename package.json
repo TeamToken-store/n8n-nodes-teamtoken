@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-teamtoken",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "n8n community node for TeamToken — one API key for image and video generation across 51 models (Veo, Kling, Seedance, Nano Banana, GPT Image, Grok Image, and more).",
   "keywords": [
     "n8n-community-node-package",
