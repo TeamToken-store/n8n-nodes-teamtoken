@@ -33,6 +33,23 @@ jobs:
       - run: npm run build
       - run: npm run lint
 
-      - run: npm publish --provenance --access public
+      # Without NPM_TOKEN the publish step fails, and a red run on a release
+      # says "not configured yet" in exactly the same way it would say "the
+      # publish broke". Decide first and skip loudly, so the only red run this
+      # workflow can produce is a real failure.
+      - name: Check whether publishing is configured
+        id: gate
+        env:
+          TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Publish skipped::NPM_TOKEN is not set — nothing was published to npm."
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.gate.outputs.publish == 'true'
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
