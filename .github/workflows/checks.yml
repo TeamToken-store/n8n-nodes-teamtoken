@@ -1,0 +1,38 @@
+# Compiles and lints the node on every push and pull request.
+#
+# These two commands are what publishing runs anyway (`prepublishOnly` builds and
+# then lints with the stricter community-node config), so running them here means
+# a break shows up on the pull request rather than at `npm publish` time, when the
+# only way out is another version bump.
+#
+# `--ignore-scripts` on install: the package has zero runtime dependencies, and
+# the one native module in the dev tree is never needed to build or lint.
+name: checks
+
+permissions:
+  contents: read
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 20 is the floor `engines` declares; 22 is the next LTS n8n users run.
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci --ignore-scripts
+      - name: Compile (tsc + icons)
+        run: npm run build
+      - name: Lint (community-node rules)
+        run: npm run lint
+      - name: Lint (stricter publish-time rules)
+        run: npx eslint -c .eslintrc.prepublish.js nodes credentials package.json

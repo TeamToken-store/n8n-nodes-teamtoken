@@ -1,0 +1,48 @@
+{
+  "name": "TeamToken — Generate a video and download it",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-002",
+      "name": "When clicking Test workflow",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "generate",
+        "model": "seedance-2-fast-720p",
+        "prompt": "a corgi surfing a neon wave, cinematic",
+        "waitForCompletion": true,
+        "maxWaitSeconds": 300,
+        "pollIntervalSeconds": 5,
+        "videoOptions": {
+          "aspect_ratio": "16:9",
+          "duration": 5,
+          "downloadVideo": true
+        }
+      },
+      "id": "teamtoken-002",
+      "name": "TeamToken",
+      "type": "n8n-nodes-teamtoken.teamToken",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "teamTokenApi": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "TeamToken API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking Test workflow": {
+      "main": [[{ "node": "TeamToken", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "meta": {}
+}

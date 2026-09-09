@@ -1,0 +1,38 @@
+# Publishes the package to npm WITH a provenance statement, which n8n's
+# verification requires (mandatory since 2026-05-01 — a package published from a
+# local machine is not accepted). Provenance needs `id-token: write` and npm's
+# --provenance flag, and only works from a hosted CI runner like this one.
+#
+# Triggered by publishing a GitHub Release: cut the release, npm gets the
+# package. The version published is whatever `package.json` carries.
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write # required for npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      # --ignore-scripts: this package has zero runtime deps; the only native
+      # module in the tree (isolated-vm, a transitive dev dep of n8n-workflow's
+      # type package) is never needed to build, lint or publish.
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm run lint
+
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

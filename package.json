@@ -1,0 +1,62 @@
+{
+  "name": "n8n-nodes-teamtoken",
+  "version": "0.1.0",
+  "description": "n8n community node for TeamToken — one API key for image and video generation across 51 models (Veo, Kling, Seedance, Nano Banana, GPT Image, Grok Image, and more).",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "teamtoken",
+    "image-generation",
+    "video-generation",
+    "ai"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/TeamToken-store/n8n-nodes-teamtoken",
+  "author": {
+    "name": "TeamToken",
+    "email": "support@teamtoken.store"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamToken-store/n8n-nodes-teamtoken.git"
+  },
+  "engines": {
+    "node": ">=20.15"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "npx rimraf dist && tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build && eslint -c .eslintrc.prepublish.js nodes credentials package.json"
+  },
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/TeamTokenApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/TeamToken/TeamToken.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.3",
+    "gulp": "^5.0.0",
+    "n8n-workflow": "*",
+    "prettier": "^3.3.3",
+    "rimraf": "^5.0.10",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

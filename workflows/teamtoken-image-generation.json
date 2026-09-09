@@ -1,0 +1,45 @@
+{
+  "name": "TeamToken — Generate an image",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-001",
+      "name": "When clicking Test workflow",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "generate",
+        "model": "nano-banana-pro",
+        "prompt": "a red cube on a white studio background, soft light",
+        "imageOptions": {
+          "aspect_ratio": "1:1",
+          "resolution": "1K",
+          "returnBinary": true
+        }
+      },
+      "id": "teamtoken-001",
+      "name": "TeamToken",
+      "type": "n8n-nodes-teamtoken.teamToken",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "teamTokenApi": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "TeamToken API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking Test workflow": {
+      "main": [[{ "node": "TeamToken", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "meta": {}
+}
