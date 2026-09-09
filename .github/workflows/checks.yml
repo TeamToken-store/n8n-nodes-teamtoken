@@ -36,3 +36,34 @@ jobs:
         run: npm run lint
       - name: Lint (stricter publish-time rules)
         run: npx eslint -c .eslintrc.prepublish.js nodes credentials package.json
+
+      # The package must actually contain the files package.json tells n8n to
+      # load. Lint reads sources, so an empty or partial dist passes every check
+      # above and only breaks for the user, at load time, after publishing.
+      #
+      # The build runs a SECOND time on purpose: a repeat build is where a
+      # compiler cache decides nothing changed and emits nothing, which is
+      # exactly what `prepublishOnly` would do on a machine that had built
+      # before. One build alone cannot see that.
+      - name: The published package contains the node and the credential
+        run: |
+          npm run build
+          npm pack --silent > /dev/null
+          tar tzf n8n-nodes-teamtoken-*.tgz > /tmp/packed.txt
+          node -e '
+            const fs = require("fs");
+            const pkg = require("./package.json");
+            const packed = new Set(
+              fs.readFileSync("/tmp/packed.txt", "utf8").split("\n")
+                .map((l) => l.trim().replace(/^package\//, "")).filter(Boolean),
+            );
+            const wanted = [...(pkg.n8n.nodes ?? []), ...(pkg.n8n.credentials ?? [])];
+            const missing = wanted.filter((f) => !packed.has(f));
+            if (missing.length) {
+              console.error("Missing from the package tarball:\n  " + missing.join("\n  "));
+              console.error("\nPacked files:\n  " + [...packed].join("\n  "));
+              process.exit(1);
+            }
+            console.log("All " + wanted.length + " entry points are in the tarball:");
+            for (const f of wanted) console.log("  " + f);
+          '
