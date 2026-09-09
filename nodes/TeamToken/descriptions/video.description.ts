@@ -12,7 +12,7 @@ export const videoOperations: INodeProperties = {
 			value: 'extend',
 			action: 'Extend a video',
 			description:
-				'Continue an existing video job into a longer clip. Requires an extend-capable model; the public catalog exposes none today, so this operation becomes usable once such a model is listed.',
+				'Continue an existing video job into a longer clip',
 		},
 		{
 			name: 'Generate',
@@ -51,7 +51,7 @@ export const videoRefVideoJobId: INodeProperties = {
 	default: '',
 	required: true,
 	description:
-		'ID of a previous video job to extend (must belong to the same account). Extension requires an extend-capable model: the dropdown lists every video model, but only an extend model actually continues the source clip — with an ordinary model the source is ignored and you pay for a fresh generation.',
+		'ID of a previous video job to extend — the job ID returned by a previous Video Generate (must belong to the same account)',
 };
 
 export const videoReferenceVideo: INodeProperties = {
