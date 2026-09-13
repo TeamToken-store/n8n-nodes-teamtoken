@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/TeamToken-store/n8n-nodes-teamtoken/main/nodes/TeamToken/teamToken.svg" width="64" alt="teamToken">
+
 # n8n-nodes-teamtoken
 
 An [n8n](https://n8n.io) community node for **TeamToken** — one API key for image
@@ -16,13 +18,16 @@ In n8n: **Settings → Community Nodes → Install**, then enter
 
 ## Credentials
 
-Create a **TeamToken API** credential:
+Create a **TeamToken API** credential. Get a key at
+[app.teamtoken.store](https://app.teamtoken.store).
 
-| Field | Default | Notes |
-| --- | --- | --- |
-| **API Key** | — | Your teamToken key (the same one used for text, image and video). |
-| **Base URL** | `https://api.teamtoken.store` | Gateway that serves the `/v1` media routes. May be entered with or without a trailing `/v1` — both work. |
-| **Model Catalog URL** | `https://app.teamtoken.store/cabinet/api/public/media-models` | Public catalog used to populate the model dropdowns. Lives on a different host than the API, so it is its own field. |
+- **API Key** — your teamToken key, the same one used for text, image and video.
+- **Base URL** — defaults to `https://api.teamtoken.store`. Serves the `/v1`
+  media routes; entering it with or without a trailing `/v1` both work.
+- **Model Catalog URL** — defaults to
+  `https://app.teamtoken.store/cabinet/api/public/media-models`. Populates the
+  model dropdowns. It lives on a different host than the API, which is why it is
+  a separate field.
 
 The credential test calls `GET /v1/models` — a valid key returns `200`, an
 invalid one `401`.
